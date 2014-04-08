@@ -1,4 +1,4 @@
-package com.wwforever.eclipsebuildunity3d;
+﻿package com.wwforever.eclipsebuildunity3d;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -8,6 +8,8 @@ import android.util.Log;
 
 import com.unity3d.player.UnityPlayer;
 import com.unity3d.player.UnityPlayerActivity;
+
+
 
 
 public class MainActivity extends UnityPlayerActivity
@@ -25,6 +27,7 @@ public class MainActivity extends UnityPlayerActivity
 
   public void JNICall_U(String strMsg, Activity activity)
   {
+  
 	  Intent intentIsStop = new Intent();
 	  intentIsStop.setAction("android.intent.action.SUPER");
 	  intentIsStop.putExtra("diceNumber", strMsg); // "명칭", "실제값"
