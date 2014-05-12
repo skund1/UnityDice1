@@ -1,0 +1,123 @@
+package kr.ac.kookmin.cs.distboard;
+
+import kr.ac.kookmin.cs.distboard.enumeration.Mode;
+import kr.ac.kookmin.cs.distboard.subobject.DicePlusGameTool;
+import kr.ac.kookmin.cs.distboard.subobject.YutGameTool;
+import kr.ac.kookmin.cs.distboard.system.DicePlusManager;
+import kr.ac.kookmin.cs.distboard.system.SubjectDeviceMapper;
+import android.content.Context;
+import android.util.Log;
+
+public class DistributedBoardgame {//singleton
+	
+	public static final String TAG = "20083271:DistributedBoardgame";
+	
+	private static DistributedBoardgame instance = new DistributedBoardgame();
+	
+	private boolean initialized = false;
+	private Mode mode = Mode.NONE;//호스트 VS 클라이언트
+	private Context context = null;
+	
+	private Mediator mediator = null;//singleton
+	private DicePlusGameTool[] dicePlusGameTools = null;
+	private YutGameTool[] yutGameTools = null;
+	private Player<?>[] player = null;
+	
+	private DistributedBoardgame(){
+		
+	}
+	
+	public static DistributedBoardgame getInstance(Context context){//싱글톤 조심용 : 최초 1회 부름
+		instance.initialized = true;//싱글톤 조심용
+		
+		instance.mode = Mode.NONE;//싱글톤 조심용
+		instance.context = context;
+		instance.mediator = null;//싱글톤 조심용
+		instance.dicePlusGameTools = null;//싱글톤 조심용
+		instance.yutGameTools = null;//싱글톤 조심용
+		instance.player = null;//싱글톤 조심용
+		return instance;
+	}
+
+	public static DistributedBoardgame getInstance(){
+		if (instance.initialized == false){
+			Log.e(TAG, "is not initialized");
+			return null;//에러처리
+		}
+		
+		return instance;
+	}
+
+	public void initializeBoardgame(
+			int millisecondTimeout,
+			int minPlayers, 
+			int maxPlayers, 
+			int exactElectricGameToolDicePlus,
+			int exactElectricGameToolYut){
+		
+		//모든 시스템 싱글톤 객체 초기화
+		//인스턴스 얻으면서 초기화하는것들은 따로 수정하던가 처리해야됨...............
+		
+		//DicePlusManager.getInstance().initialize();
+		//SubjectDeviceMapper.getInstance().initialize(minPlayers, maxPlayers, exactElectricGameToolYut, exactElectricGameToolDicePlus);
+		this.mediator = Mediator.getInstance(minPlayers, maxPlayers, exactElectricGameToolDicePlus, exactElectricGameToolYut);
+		this.mediator.negotiate(millisecondTimeout);
+	}
+	
+	public Player<?> getMe(){
+		return null;
+	}
+	
+	//called by system
+	
+	void setDicePlusGameTools(DicePlusGameTool[] dicePlusGameTools) {
+		if(player != null){
+			Log.e(TAG,"aleady have dicePlusGameTools.");
+		}
+		this.dicePlusGameTools = dicePlusGameTools;
+	}
+
+	void setYutGameTools(YutGameTool[] yutGameTools) {
+		if(player != null){
+			Log.e(TAG,"aleady have yutGameTools.");
+		}
+		this.yutGameTools = yutGameTools;
+	}
+
+	void setPlayer(Player<?>[] players) {
+		if(player != null){
+			Log.e(TAG,"aleady have players.");
+		}
+		this.player = player;
+	}
+	
+	
+	//getters
+	
+	public Context getContext(){
+		return context;
+	}
+
+	public Mode getMode() {
+		return mode;
+	}
+
+	public Mediator getMediator() {
+		return mediator;
+	}
+
+	public DicePlusGameTool[] getDicePlusGameTools() {
+		return dicePlusGameTools;
+	}
+
+	public YutGameTool[] getYutGameTools() {
+		return yutGameTools;
+	}
+
+	public Player<?>[] getPlayer() {
+		return player;
+	}
+
+	
+
+}

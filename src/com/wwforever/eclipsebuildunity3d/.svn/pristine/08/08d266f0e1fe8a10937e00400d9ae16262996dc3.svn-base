@@ -1,0 +1,266 @@
+package kr.ac.kookmin.cs.distboard.system;
+
+import kr.ac.kookmin.cs.distboard.Player;
+import kr.ac.kookmin.cs.distboard.subobject.DicePlusGameTool;
+import kr.ac.kookmin.cs.distboard.subobject.YutGameTool;
+import us.dicepl.android.sdk.Die;
+import android.bluetooth.BluetoothDevice;
+import android.util.Log;
+
+public class SubjectDeviceMapper {
+	
+	private static final String TAG = "20083271:SubjectDeviceMapper";
+	private static SubjectDeviceMapper instance = new SubjectDeviceMapper();
+	
+	private boolean isAvaliable = false;//모두 맵핑이 완료되었는지?(모든 장치가 등록되었는지)
+	private boolean initialized = false;//초기화되었는지(검증위해서)
+	
+	private int minPlayers;
+	private int maxPlayers;
+	private int exacetYutGameTools;
+	private int exacetDicePluses;
+	
+	private Player[] players = null;
+	private BluetoothDevice[] clientDevices = null;
+	
+	private YutGameTool[] yutGameTools = null;
+	private BluetoothDevice[] yutDevices = null;
+	
+	private DicePlusGameTool[] dicePluses = null;
+	private Die[] dice = null;
+	
+	//constructor
+	private SubjectDeviceMapper(){
+		
+	}
+	
+	public void initialize(int minPlayers, int maxPlayers, int exactYutGameTools, int exactDicePluses){//싱글톤 조심 최초 1회 반드시 초기화할 것
+		isAvaliable = false;//싱글톤 조심용
+		initialized = true;//초기화됨.
+		
+		this.minPlayers = minPlayers;
+		this.maxPlayers = maxPlayers;
+		this.exacetYutGameTools = exactYutGameTools;
+		this.exacetDicePluses = exactDicePluses;
+		
+		this.players = null;//싱글톤 조심용
+		this.clientDevices = null;//싱글톤 조심용
+		
+		this.yutGameTools = null;//싱글톤 조심용
+		this.yutDevices = null;//싱글톤 조심용
+		
+		this.dicePluses = null;//싱글톤 조심용
+		this.dice = null;//싱글톤 조심용
+	}
+	
+	
+	//static method
+	
+	public static SubjectDeviceMapper getInstance(){
+		return instance;
+	}
+	
+	//method
+	
+	public boolean isAvailable(){
+		if(isAvaliable == false){
+			if(		players == null || clientDevices == null || yutGameTools == null ||
+					yutDevices == null || dicePluses == null || dice == null){
+				Log.e(TAG, "Incompletely mapped Error.");
+				
+			}else if(		players.length == clientDevices.length && yutGameTools.length == yutDevices.length && dicePluses.length == dice.length){
+				isAvaliable = true;
+				Log.i(TAG, "isAvailable is true");
+			}else{
+				Log.i(TAG, "isAvailable is false : length difference error occured.");
+			}
+				
+		}
+		
+		return isAvaliable;
+	}
+	
+	//called by bluetoothManager Or DicePlusManager
+	
+	public void registerClientDevices(BluetoothDevice[] clientDevices){
+		if(initialized == false){
+			Log.e(TAG, "is not initialized");
+			return;
+		}
+		
+		if(clientDevices == null){
+			Log.e(TAG, "clientDevices must not be null.");
+			return;
+		}
+		
+		if(clientDevices.length >= minPlayers && clientDevices.length <= maxPlayers){
+			this.clientDevices = clientDevices;
+			
+			this.players = new Player[clientDevices.length];
+			
+			for(int i = 0 ; i < clientDevices.length ; i++){
+				this.players[i] = new Player();
+			}
+			
+			//이 등록으로부터 맵퍼가 사용가능하면 중재자의 정보에 반영
+			if(isAvailable()){
+				
+			}
+			
+		}else{
+			Log.e(TAG, "different length error.");
+		}
+	}
+	
+	public void registerYutDevices(BluetoothDevice[] yutDevices){
+		if(initialized == false)
+			Log.e(TAG, "is not initialized");
+		
+		if(yutDevices == null)
+			Log.e(TAG, "yutDevices must not be null.");
+		
+		if(yutDevices.length == exacetYutGameTools){
+			this.yutDevices = yutDevices;
+		
+			this.yutGameTools = new YutGameTool[yutDevices.length];
+		
+			for(int i = 0 ; i < yutDevices.length ; i++){
+				this.yutGameTools[i] = new YutGameTool();
+			}
+		}else{
+			Log.e(TAG, "different length error.");
+		}
+	}
+	
+	public void registerDice(Die[] dice){
+		if(initialized == false)
+			Log.e(TAG, "is not initialized");
+		
+		if(dice == null)
+			Log.e(TAG, "dice must not be null.");
+		
+		if(dice.length == exacetDicePluses){
+			this.dice = dice;
+			this.dicePluses = new DicePlusGameTool[dice.length];
+			
+			for(int i = 0 ; i < dice.length ; i++){
+				this.dicePluses[i] = new DicePlusGameTool();
+			}
+		}else{
+			Log.e(TAG, "different length error.");
+		}
+	}
+
+	//called by mediator
+	
+	//플레이어를 리턴, 사용가능하지 않으면 null
+	public Player[] getPlayers(){
+		if(isAvailable()){
+			return this.players;
+		}
+		Log.e(TAG, "is not available.");
+		return null;
+	}
+	
+	//전자윷을 리턴, 사용가능하지 않으면 null
+	public YutGameTool[] getYutGameTools(){
+		if(isAvailable()){
+				return this.yutGameTools;
+		}
+		Log.e(TAG, "is not available.");
+		return null;
+	}
+	
+	//전자윷을 리턴, 사용가능하지 않으면 null
+	public DicePlusGameTool[] getDicePlusGameTools(){
+		if(isAvailable()){
+					return this.dicePluses;
+		}
+		Log.e(TAG, "is not available.");
+		return null;
+	}
+	
+	
+	//mapping method - device to subject
+	//맵핑실패하거나 맵핑될 객체가 null 이면 null 리턴
+	
+	public Object map(BluetoothDevice device){
+		if(isAvailable()){
+			//먼저 클라이언트 훑어보고
+			for(int i = 0 ; i < clientDevices.length ; i++){
+				if(device.equals(clientDevices[i]) == true){
+					return players[i];//플레이어 리턴
+				}
+			}
+			//윷 훑어봄
+			for(int i = 0 ; i < yutDevices.length ; i++){
+				if(device.equals(yutDevices[i]) == true){
+					return yutGameTools[i];//윷 리턴
+				}
+			}
+		}
+		return null;
+	}
+	
+	public DicePlusGameTool map(Die die){
+		if(isAvailable()){
+			
+			//주사위 장치를 훑어본다
+			for(int i = 0 ; i < dice.length ; i++){
+				if(die.equals(dice[i]) == true){
+					return dicePluses[i];//플레이어 리턴
+				}
+			}
+		}else{
+			Log.e(TAG, "Mapper is not available.");
+		}
+		return null;
+	}
+	
+	
+	//mapping method - subject to device
+	//맵핑실패하거나 맵핑될 객체가 null 이면 null 리턴
+	
+	public BluetoothDevice map(Player player){
+		if(isAvailable()){
+			//플레이어 훑어본다
+			for(int i = 0 ; i < players.length ; i++){
+				if(player.equals(players[i]) == true){
+					return clientDevices[i];//플레이어 리턴
+				}
+			}
+		}else{
+			Log.e(TAG, "Mapper is not available.");
+		}
+		return null;
+	}
+	
+	public BluetoothDevice map(YutGameTool yutGameTool){
+		if(isAvailable()){
+			//먼저 클라이언트 훑어보고
+			for(int i = 0 ; i < yutGameTools.length ; i++){
+				if(yutGameTool.equals(yutGameTools[i]) == true){
+					return yutDevices[i];//플레이어 리턴
+				}
+			}
+		}else{
+			Log.e(TAG, "Mapper is not available.");
+		}
+		return null;
+	}
+
+	public Die map(DicePlusGameTool dicePlusGameTool){
+		if(isAvailable()){
+			//먼저 클라이언트 훑어보고
+			for(int i = 0 ; i < dicePluses.length ; i++){
+				if(dicePlusGameTool.equals(dicePluses[i]) == true){
+					return dice[i];//플레이어 리턴
+				}
+			}
+		}else{
+			Log.e(TAG, "Mapper is not available.");
+		}
+		return null;
+	}
+	
+}

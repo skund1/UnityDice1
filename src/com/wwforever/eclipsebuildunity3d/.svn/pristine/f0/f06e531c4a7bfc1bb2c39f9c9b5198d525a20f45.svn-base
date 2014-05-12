@@ -1,0 +1,46 @@
+package kr.ac.kookmin.cs.distboard;
+
+import kr.ac.kookmin.cs.distboard.controller.PlayerAdapter;
+import kr.ac.kookmin.cs.distboard.controller.PlayerListener;
+import kr.ac.kookmin.cs.distboard.subobject.Distracter;
+
+public class Player<T> {
+	
+	private static PlayerListener playerListener = new PlayerAdapter();
+	
+	public static void registerPlayerListenr(PlayerListener playerListener){
+		Player.playerListener = playerListener;
+	}
+	
+	//function
+	
+	public Distracter getChoice(Distracter distracter){
+		return null;
+	}
+	
+	public void give(T[] objs){
+		
+	}
+	
+	public void take(T[] objs){
+		
+	}
+	
+	public int[] rollDice(){
+		return null;
+	}
+	
+	public int[] rollYut(){
+		return null;
+	}
+	
+	public void giveSituation(Object obj){
+		
+	}
+	
+	//static method
+	
+	public static PlayerListener getPlayerListener(){
+		return Player.playerListener;
+	}
+}

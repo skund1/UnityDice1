@@ -1,0 +1,23 @@
+package kr.ac.kookmin.cs.distboard.subobject;
+
+import kr.ac.kookmin.cs.distboard.GameTool;
+
+public final class DicePlusGameTool extends GameTool {
+
+	
+	public int getFace(){
+		return 0;
+	}
+	
+	public int getRolledFace(){
+		return 0;
+	}
+	
+	/**
+	 * etc
+	 */
+	
+	public void setColor(int r, int g, int b){
+		
+	}
+}

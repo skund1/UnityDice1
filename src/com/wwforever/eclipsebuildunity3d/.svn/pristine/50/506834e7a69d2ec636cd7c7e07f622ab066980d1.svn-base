@@ -1,0 +1,10 @@
+package kr.ac.kookmin.cs.distboard.protocol;
+
+public class RequestReplyManager extends Thread implements Runnable{
+	
+	
+	
+	public void run(){
+		
+	}
+}

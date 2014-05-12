@@ -1,0 +1,33 @@
+package kr.ac.kookmin.cs.distboard.controller;
+
+import kr.ac.kookmin.cs.distboard.Player;
+import kr.ac.kookmin.cs.distboard.subobject.DicePlusGameTool;
+import kr.ac.kookmin.cs.distboard.subobject.YutGameTool;
+
+public class GameToolAdapter implements GameToolListener{
+
+	@Override
+	public void onDicePlusRoll(DicePlusGameTool dicePlusGameTool, int face) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onYutRoll(YutGameTool yutGameTool, int face) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onPlayerDiceRoll(Player player, int[] faces) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onPlayerYutRoll(Player player, int[] faces) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

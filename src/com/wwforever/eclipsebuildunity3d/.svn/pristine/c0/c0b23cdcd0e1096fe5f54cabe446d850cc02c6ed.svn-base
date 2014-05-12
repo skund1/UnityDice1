@@ -1,0 +1,185 @@
+package kr.ac.kookmin.cs.distboard.system;
+
+import kr.ac.kookmin.cs.distboard.enumeration.DeviceType;
+import kr.ac.kookmin.cs.distboard.enumeration.Mode;
+import android.bluetooth.BluetoothDevice;
+import android.util.Log;
+
+public class BluetoothManager {//싱글톤
+	
+	private static BluetoothManager instance = new BluetoothManager();
+	private final static String TAG = "20083271:BluetoothManager";
+	
+	private boolean initialized = false;//모드가 초기화 되었는지
+	private Mode mode = Mode.NONE;//블루투스 매니저의 작동 모드(호스트 vs 클라이언트)
+	
+	//아래는 호스트입장이라면 여러개의 장치, 클라이언트 입장이라면 한개의 장치가 되겠지
+	private BluetoothDevice[] devices = null;//연결된 장치
+	private DeviceType[] deviceTypes = null;//연결된 장치의 타입
+	
+	
+	//중요! 호스트입장과 클라이언트 입장 모두 고려!
+	//0. 각 장치가 클라이언트인지 전자도구인지 정보유지
+	//1. 특정 장치 연결 끊길 시 연결 끊긴 장치 기억
+	//2. 연결된 장치 또는 스레드 배열 유지할 때 재접속해도 같은 배열 인덱스 가져야함
+	//3. 블루투스 매니저는 싱글톤
+	//4. 연결상태에 대한 변화를 CommunicationStateManager 클래스에 보고(메서드 콜)해야함 : 해당 클래스의 메서드를 참고
+	//5. "보고"라는 말은 모두 CommunicationStateManager 의 적정 메서드를 호출하는 일을 뜻함
+	//6. 물음표는 아직 확정되지 않은 부분
+	//7. 기본적 getter 메서드는 생략함
+	//8. 블루투스매니저는 자신이 호스트모드인지 클라이언트 모드인지 알 필요가 있다.
+	//9. 연결될 것이 없더라도 상태를 보고한다.(예를들어 클라이언트 0명일때 0칸 짜리 배열로)
+	//10. 구성 중간에 연결되었었던 클라이언트 끊기면 당연히 해당 장치를 다시기다려야함.
+	
+	
+	//호스트-클라이언트
+	//생성자
+	private BluetoothManager(){
+	}
+	
+	//호스트-클라이언트
+	//초기화 된 블루투스매니저의 인스턴스를 얻습니다.
+	public static BluetoothManager getInstance(){
+		if(instance.initialized == false){
+			//에러출력
+			Log.e(TAG, "Bluetooth manager has not been initialized");
+			return null;
+		}else{
+			return instance;
+		}
+	}
+	
+	//호스트-클라이언트
+	//초기화하면서 블루투스매니저의 인스턴스를 얻습니다.
+	public static BluetoothManager getInstance(Mode mode){//최초 1회만 부름
+		
+		instance.initialized = true;
+		instance.mode = mode;
+		instance.devices = null;
+		instance.deviceTypes = null;
+		Log.e(TAG, "Bluetooth manager has been initialized : " + mode);
+		return instance;
+		
+	}
+	
+	//호스트-클라이언트
+	//파라미터의 장치에 대한 타입을 리턴한다.
+	//타입 : 호스트 OR 클라이언트 OR 전자도구
+	//DeviceType 열거형 참조
+	public DeviceType getTypeOf(BluetoothDevice device){
+		return null;
+	}
+	
+	//호스트-클라이언트
+	//연결된 장치 리스트를 리턴합니다.
+	public BluetoothDevice[] getDevices(){
+		return null;
+	}
+	
+	//호스트
+	//클라이언트 장치 목록을 얻습니다.
+	public BluetoothDevice[] getClientDevice(){
+		return null;
+	}
+	
+	//클라이언트
+	//호스트 장치를 얻습니다.
+	public BluetoothDevice getHostDevice(){
+		return null;
+	}
+	
+	//호스트
+	//전자게임도구 장치목록을 얻습니다.
+	public BluetoothDevice[] getElectricGameToolDevice(){
+		return null;
+	}
+	
+	//클라이언트
+	//주변 장치를 검색해서 리턴합니다.
+	//사실 필요할지는 모르겠음
+	public BluetoothDevice[] getDiscoveredDevices(){
+		return null;
+	}
+	
+	//호스트
+	//호스트 입장에서 클라이언트는 기다리고 도구는 접속시도합니다.
+	//시간 초과시 보고합니다.
+	public void establish(int maxClients , int numYutGameTool, int millisecTimeOut){
+		
+		CommunicationStateManager.getInstance().onEstablishComplete(new BluetoothDevice[0], new BluetoothDevice[0]);//임시 보고
+	}
+	
+	//호스트
+	//재구성
+	//이 메서드는 부를일이 없을 듯
+	public void reEstablish(){
+		//첫 establish 의 설정정보들을 이용하여 다시 기다림.
+		//이미 접속된놈말고 접속안되거나 끊긴놈들 기다림
+		//기존에 정보없던 장치 접속시도시 따로 처리
+	}
+
+	//호스트
+	//현재 접속된 놈들로 구성설정을 완료한다.(강제로)
+	//예를들어 최소2명 최대4명인 게임에서 3명접속시 게임하고싶을때 이 메서드가 호출되고 게임은 3명이 진행하는거로 설정된다.
+	//이메서드 이후에 getDevices() 호출하면 클라이언트는 3칸짜리 배열이겟지
+	public void completeEstablishment(){
+		
+	}
+	
+	//클라이언트
+	//접속
+	public void connect(BluetoothDevice device){
+		//접속
+	}
+	
+	//CLIENT 재접속
+	public void reconnect(){
+		
+		//기존의 호스트 장치로 접속한다.
+		
+	}
+	
+	//HOST, CLIENT 연결된 장치 목록을 모두 비우고 관련된 상태들을 처음 상태로 리셋
+	//HOST, CLIENT 인지 여부는 제외
+	//이 메서드를 호출하고 나서 establish할 것인데 아직 필요한지는 모르겠네
+	public void reset(){
+			
+	}
+	
+	//호스트-클라이언트
+	//연결 해제
+	public void release(BluetoothDevice device){
+		
+	}
+	
+	//모든 장치 연결해제
+	public void releaseAll(){
+		
+	}
+	
+	//장치를 기다림
+	//!!!!!!!초기 구성도중에 끊긴놈을 기다리는것은 wait이 아니라 단지 구성이 덜된것이다.
+	//그러니까 초기구성중에 4명중 3명까지 접속된 상태에서 첫번째놈이 끊겼다고해서
+	//이것을 자체적으로 호출하면 안됨
+	//이 메서드는 게임 도중에 호출됨
+	public void waitDevice(BluetoothDevice device, int MillisecTimeOut){
+		
+		//이미 연결된 장치면 바로 리턴
+		//디바이스가 클라이언트면 기다리고
+		//도구면 접속함
+		//완료시 보고함
+	}
+	
+	//???????????????
+	public void write(BluetoothDevice device, byte[] bytes){
+		
+	}
+	
+	//???????????????
+	public byte[] read(){
+		return null;
+	}
+
+	//GETTER
+
+}

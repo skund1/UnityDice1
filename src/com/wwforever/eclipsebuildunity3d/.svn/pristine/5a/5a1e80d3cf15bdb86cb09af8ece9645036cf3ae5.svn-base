@@ -1,0 +1,17 @@
+package kr.ac.kookmin.cs.distboard.controller;
+
+import kr.ac.kookmin.cs.distboard.Player;
+import kr.ac.kookmin.cs.distboard.subobject.DicePlusGameTool;
+import kr.ac.kookmin.cs.distboard.subobject.YutGameTool;
+
+public interface GameToolListener {
+	
+	public abstract void onDicePlusRoll(DicePlusGameTool dicePlusGameTool, int face);
+	
+	public abstract void onYutRoll(YutGameTool yutGameTool, int face);
+	
+	public abstract void onPlayerDiceRoll(Player player, int[] faces);
+	
+	public abstract void onPlayerYutRoll(Player player, int[] faces);
+	
+}

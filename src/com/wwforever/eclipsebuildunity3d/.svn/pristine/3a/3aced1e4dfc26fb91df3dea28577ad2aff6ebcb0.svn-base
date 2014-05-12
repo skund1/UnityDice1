@@ -1,0 +1,62 @@
+package kr.ac.kookmin.cs.distboard.controller;
+
+import kr.ac.kookmin.cs.distboard.Player;
+import kr.ac.kookmin.cs.distboard.subobject.Distracter;
+
+public class PlayerAdapter implements PlayerListener{
+
+	@Override
+	public Distracter onChoiceRequest(Player<?> srcPlayer, Distracter distracter) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void onGiveRequest(Player<?> srcPlayer, Object[] content) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onTakeRequest(Player<?> srcPlayer, Object[] content) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onGiveSituation(Player<?> srcPlayer, Object situation) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onRollDiceRequest() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onRollYutRequest() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onGetOutRequest() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onRollDiceResult(Player<?> srcPlayer, int result) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onRollYutResult(Player<?> srcPlayer, int result) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

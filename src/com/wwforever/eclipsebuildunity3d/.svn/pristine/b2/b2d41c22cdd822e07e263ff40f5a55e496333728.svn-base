@@ -1,0 +1,204 @@
+package kr.ac.kookmin.cs.distboard.system;
+
+import java.util.ArrayList;
+
+import kr.ac.kookmin.cs.distboard.DistributedBoardgame;
+import kr.ac.kookmin.cs.distboard.GameTool;
+
+import us.dicepl.android.sdk.BluetoothManipulator;
+import us.dicepl.android.sdk.DiceConnectionListener;
+import us.dicepl.android.sdk.DiceController;
+import us.dicepl.android.sdk.DiceResponseAdapter;
+import us.dicepl.android.sdk.DiceResponseListener;
+import us.dicepl.android.sdk.DiceScanningListener;
+import us.dicepl.android.sdk.Die;
+import us.dicepl.android.sdk.responsedata.RollData;
+import android.util.Log;
+
+public class DicePlusManager extends Thread implements Runnable {
+
+	private static final String TAG = "20083271:DicePlusManager";
+	
+	
+	private static DicePlusManager instance = new DicePlusManager();
+	private static final int[] developerKey = new int[] { 0x83, 0xed, 0x60, 0x0e, 0x5d, 0x31, 0x8f, 0xe7 };
+
+	
+	private boolean initialized = false;
+	private int exactElectricGameToolDicePlus = 0;
+	private ArrayList<Die> dice = new ArrayList<Die>();
+	
+	DiceScanningListener scanningListener = new DiceScanningListener() {
+
+		@Override
+		public synchronized void onNewDie(Die die) {
+			Log.d(TAG, "New Die");
+			//dicePluses.add(die);
+			
+			DiceController.connect(die);
+		}
+
+		@Override
+		public synchronized void onScanStarted() {
+			Log.d(TAG, "Scan Started");
+		}
+
+		@Override
+		public synchronized void onScanFailed() {
+			Log.d(TAG, "Scan Fail");
+			BluetoothManipulator.startScan();
+		}
+
+		@Override
+		public synchronized void onScanFinished() {
+			Log.d(TAG, "Scan Finished");
+			if (dice.size() != exactElectricGameToolDicePlus) {
+				Log.d(TAG, "Rescan Started");
+				BluetoothManipulator.startScan();
+			}
+		}
+	};
+
+	DiceConnectionListener connectionListener = new DiceConnectionListener() {
+
+		@Override
+		public synchronized void onConnectionEstablished(Die die) {
+			Log.d(TAG, "DICE+ Connected");
+			
+			// Signing up for roll events
+			dice.add(die);
+			CommunicationStateManager.getInstance().onDicePlusConnected(die);
+			
+			//만약 모든 주사위가 모였으면 이제그만 스캔
+			if(dice.size() == exactElectricGameToolDicePlus){
+				Log.d(TAG, "All Dice Connected");
+				BluetoothManipulator.cancelScan();
+				CommunicationStateManager.getInstance().onDicePlusEstablishComplete((Die[])dice.toArray());
+			}
+			
+			DiceController.subscribeRolls(die);
+			
+			
+			
+			
+		}
+
+		@Override
+		public synchronized void onConnectionFailed(Die die, Exception e) {
+			Log.d(TAG, "Connection Failed", e);
+
+			if (dice.remove(dice.indexOf(die)) == null)
+				Log.d(TAG, "Remove Dice Failed On Failed");
+			
+			BluetoothManipulator.startScan();
+		}
+
+		@Override
+		public synchronized void onConnectionLost(Die die) {
+			Log.d(TAG, "Connection Lost");
+			
+			//끊김보고
+			CommunicationStateManager.getInstance().onDicePlusLost(die);
+
+			if (dice.remove(dice.indexOf(die)) == null)
+				Log.d(TAG, "Remove Dice Failed On Lost");
+
+			BluetoothManipulator.startScan();
+		}
+
+	};
+
+	
+	DiceResponseListener responseListener = new DiceResponseAdapter() {
+
+		@Override
+		public synchronized void onRoll(Die die, RollData rollData, Exception e) {
+			super.onRoll(die, rollData, e);
+
+			Log.d(TAG, "Roll: " + rollData.face);
+			
+			GameTool.getGameToolListener().onDicePlusRoll(SubjectDeviceMapper.getInstance().map(die), rollData.face);
+
+		}
+	};
+
+
+	//생성자
+	private DicePlusManager() {
+		
+	}
+	
+	public static DicePlusManager getInstance(){
+		return instance;
+	}
+	
+	public void initialize(){//싱글톤 조심용
+		initialized = true;
+		exactElectricGameToolDicePlus = 0;
+		dice = new ArrayList<Die>();
+	}
+	
+	public void establish(int exactElectricGameToolDicePlus, int millisecTimeOut){
+		
+		//초기화 되지 않았으면 : 싱글톤 조심용
+		if(initialized == false){
+			Log.e(TAG, "is not initialized");
+			return;
+		}
+		
+		//연결할 Dice+ 개수가 0개이면
+		if(exactElectricGameToolDicePlus == 0){
+			//보고 후 바로 리턴
+			CommunicationStateManager.getInstance().onDicePlusEstablishComplete(new Die[0]);
+			return;
+		}
+		
+		BluetoothManipulator.initiate(DistributedBoardgame.getInstance().getContext());
+	    DiceController.initiate(developerKey);
+	    
+	    this.exactElectricGameToolDicePlus = exactElectricGameToolDicePlus;
+
+	    // Listen to all the state occurring during the discovering process of DICE+
+	    BluetoothManipulator.registerDiceScanningListener(scanningListener);
+
+	    // When connecting to DICE+ you get two responses: a good one and a bad one ;)
+	    DiceController.registerDiceConnectionListener(connectionListener);
+
+	    // Attaching to DICE+ events that we subscribed to.
+	    DiceController.registerDiceResponseListener(responseListener);
+
+	    // Scan for a DICE+
+	    BluetoothManipulator.startScan();
+	    
+	    //타임아웃 설정
+	    try {
+			Thread.sleep(millisecTimeOut);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+	    //타임아웃 뒤에 모든 접속시도 취소
+	    BluetoothManipulator.cancelScan();
+	    
+	    //불완전한 구성이면 
+	    if(exactElectricGameToolDicePlus != dice.size()){
+	    	Log.e(TAG, "Incomplete Dice+ establish error : " + dice.size() + "/" + exactElectricGameToolDicePlus);
+	    	CommunicationStateManager.getInstance().onDicePlusEstablishFailed();
+	    }
+	    
+	    
+	}
+
+	public void cancel() {
+		BluetoothManipulator.cancelScan();
+	}
+	
+	
+	//getter
+	
+	public Die[] getDice(){
+		return (Die[])dice.toArray();
+	}
+	
+}

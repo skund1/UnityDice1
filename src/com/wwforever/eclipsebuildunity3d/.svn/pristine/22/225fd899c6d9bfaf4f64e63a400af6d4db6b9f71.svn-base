@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20110701" xmlns:xmi="http://www.omg.org/spec/XMI/20110701" xmlns:uml="http://www.eclipse.org/uml2/4.0.0/UML" xmi:id="_v3w5MJ0KEeOvBvuKBnxxxw" name="NewModel">
+  <packagedElement xmi:type="uml:Class" xmi:id="_6ZhAsJ0KEeOvBvuKBnxxxw" name="DistributedBoardgame"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_7buroJ0KEeOvBvuKBnxxxw" name="Mediator"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_8BMJIJ0KEeOvBvuKBnxxxw" name="Player"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_J3CeoJ0LEeOvBvuKBnxxxw" name="DiceplusGameTool"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_MjihIJ0LEeOvBvuKBnxxxw" name="YutGameTool"/>
+  <packagedElement xmi:type="uml:Association" xmi:id="_S0zD0J0LEeOvBvuKBnxxxw" name="yutGameToolsToDistributedBoardgames" memberEnd="_S0zq4J0LEeOvBvuKBnxxxw _S1C7cZ0LEeOvBvuKBnxxxw" navigableOwnedEnd="_S0zq4J0LEeOvBvuKBnxxxw _S1C7cZ0LEeOvBvuKBnxxxw">
+    <ownedEnd xmi:id="_S0zq4J0LEeOvBvuKBnxxxw" name="yutGameTools" type="_MjihIJ0LEeOvBvuKBnxxxw" association="_S0zD0J0LEeOvBvuKBnxxxw">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_S1BGQJ0LEeOvBvuKBnxxxw"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_S1C7cJ0LEeOvBvuKBnxxxw" value="*"/>
+    </ownedEnd>
+    <ownedEnd xmi:id="_S1C7cZ0LEeOvBvuKBnxxxw" name="distributedBoardgames" type="_6ZhAsJ0KEeOvBvuKBnxxxw" association="_S0zD0J0LEeOvBvuKBnxxxw">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_S1DigJ0LEeOvBvuKBnxxxw"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_S1DigZ0LEeOvBvuKBnxxxw" value="*"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_TJwnMJ0LEeOvBvuKBnxxxw" name="playersToDistributedBoardgames" memberEnd="_TJxOQJ0LEeOvBvuKBnxxxw _TJzDcJ0LEeOvBvuKBnxxxw" navigableOwnedEnd="_TJxOQJ0LEeOvBvuKBnxxxw _TJzDcJ0LEeOvBvuKBnxxxw">
+    <ownedEnd xmi:id="_TJxOQJ0LEeOvBvuKBnxxxw" name="players" type="_8BMJIJ0KEeOvBvuKBnxxxw" association="_TJwnMJ0LEeOvBvuKBnxxxw">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TJycYJ0LEeOvBvuKBnxxxw"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TJycYZ0LEeOvBvuKBnxxxw" value="*"/>
+    </ownedEnd>
+    <ownedEnd xmi:id="_TJzDcJ0LEeOvBvuKBnxxxw" name="distributedBoardgames" type="_6ZhAsJ0KEeOvBvuKBnxxxw" association="_TJwnMJ0LEeOvBvuKBnxxxw">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TJzqgJ0LEeOvBvuKBnxxxw"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TJ0RkJ0LEeOvBvuKBnxxxw" value="*"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_TeC1IJ0LEeOvBvuKBnxxxw" name="diceplusGameToolsToDistributedBoardgames" memberEnd="_TeC1IZ0LEeOvBvuKBnxxxw _TeEDQp0LEeOvBvuKBnxxxw" navigableOwnedEnd="_TeC1IZ0LEeOvBvuKBnxxxw _TeEDQp0LEeOvBvuKBnxxxw">
+    <ownedEnd xmi:id="_TeC1IZ0LEeOvBvuKBnxxxw" name="diceplusGameTools" type="_J3CeoJ0LEeOvBvuKBnxxxw" association="_TeC1IJ0LEeOvBvuKBnxxxw">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TeEDQJ0LEeOvBvuKBnxxxw"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TeEDQZ0LEeOvBvuKBnxxxw" value="*"/>
+    </ownedEnd>
+    <ownedEnd xmi:id="_TeEDQp0LEeOvBvuKBnxxxw" name="distributedBoardgames" type="_6ZhAsJ0KEeOvBvuKBnxxxw" association="_TeC1IJ0LEeOvBvuKBnxxxw">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TeFRYJ0LEeOvBvuKBnxxxw"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TeFRYZ0LEeOvBvuKBnxxxw" value="*"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_TwXUMJ0LEeOvBvuKBnxxxw" name="mediatorsToDistributedBoardgames" memberEnd="_TwX7QJ0LEeOvBvuKBnxxxw _TwZwcZ0LEeOvBvuKBnxxxw" navigableOwnedEnd="_TwX7QJ0LEeOvBvuKBnxxxw _TwZwcZ0LEeOvBvuKBnxxxw">
+    <ownedEnd xmi:id="_TwX7QJ0LEeOvBvuKBnxxxw" name="mediators" type="_7buroJ0KEeOvBvuKBnxxxw" association="_TwXUMJ0LEeOvBvuKBnxxxw">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_TwZJYJ0LEeOvBvuKBnxxxw"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_TwZwcJ0LEeOvBvuKBnxxxw" value="*"/>
+    </ownedEnd>
+    <ownedEnd xmi:id="_TwZwcZ0LEeOvBvuKBnxxxw" name="distributedBoardgames" type="_6ZhAsJ0KEeOvBvuKBnxxxw" association="_TwXUMJ0LEeOvBvuKBnxxxw">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Twa-kJ0LEeOvBvuKBnxxxw"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Twa-kZ0LEeOvBvuKBnxxxw" value="*"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Interface" xmi:id="_WqlpoJ0LEeOvBvuKBnxxxw" name="ParticipantListener"/>
+  <packagedElement xmi:type="uml:Association" xmi:id="_diWysJ0LEeOvBvuKBnxxxw" name="participantListenersToMediators" memberEnd="_diWysZ0LEeOvBvuKBnxxxw _diYA0Z0LEeOvBvuKBnxxxw" navigableOwnedEnd="_diWysZ0LEeOvBvuKBnxxxw _diYA0Z0LEeOvBvuKBnxxxw">
+    <ownedEnd xmi:id="_diWysZ0LEeOvBvuKBnxxxw" name="participantListeners" type="_WqlpoJ0LEeOvBvuKBnxxxw" association="_diWysJ0LEeOvBvuKBnxxxw">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_diXZwJ0LEeOvBvuKBnxxxw"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_diYA0J0LEeOvBvuKBnxxxw" value="*"/>
+    </ownedEnd>
+    <ownedEnd xmi:id="_diYA0Z0LEeOvBvuKBnxxxw" name="mediators" type="_7buroJ0KEeOvBvuKBnxxxw" association="_diWysJ0LEeOvBvuKBnxxxw">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_diYn4J0LEeOvBvuKBnxxxw"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_diYn4Z0LEeOvBvuKBnxxxw" value="*"/>
+    </ownedEnd>
+  </packagedElement>
+</uml:Model>

@@ -1,0 +1,124 @@
+package kr.ac.kookmin.cs.distboard.system;
+
+import kr.ac.kookmin.cs.distboard.DistributedBoardgame;
+import kr.ac.kookmin.cs.distboard.enumeration.DeviceType;
+import us.dicepl.android.sdk.Die;
+import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
+
+public class CommunicationStateManager {
+	
+	private static CommunicationStateManager instance = new CommunicationStateManager();
+	
+	private CommunicationStateManager(){
+		
+	}
+	
+	
+	public static CommunicationStateManager getInstance(){
+		return instance;
+	}
+	
+	
+	//호스트
+	
+	
+	//호스트 - 초기 구성설정 완료되면
+	public void onEstablishComplete(BluetoothDevice[] clientDevices, BluetoothDevice[] yutDevices){
+		//맵핑 등록
+		SubjectDeviceMapper.getInstance().registerClientDevices(clientDevices);
+		SubjectDeviceMapper.getInstance().registerYutDevices(yutDevices);
+		
+		//모두 끝나면 OK_TO_GO 각 클라이언트에게 전송
+	}
+	
+	//호스트 - 클라이언트또는 전자도구와 연결이 성공하면
+	public void onConnected(BluetoothDevice device){
+		//게임도중인경우와 준비기간인 경우 두가지 경우가있다.
+		//맵핑
+	}
+	
+	//호스트 - 초기 구성 시간넘으면
+	public void onEstablishTimeOut(){
+		
+	}
+	
+	//호스트 - 끊긴 장치에 대해 WAIT 성공하면(성공적으로 접속했을 때)
+	public void onWaitComplete(BluetoothDevice device){
+		//구성도중에는 이 개념이 없다.
+	}
+	
+	//호스트 - 해당 장치가 시간내에 접속안되면/안하면
+	public void onWaitTimeout(BluetoothDevice device){
+		//전자도구 경우
+		//클라이언트 경우
+	}
+	
+	//호스트 - 클라이언트 접속 끊기면
+	public void onConnectionLost(BluetoothDevice device){
+			
+	}
+		
+	//호스트 - 예상에 없던 장치가 접속시도하면
+	public void onUnexpectedConnectionDetected(BluetoothDevice device){
+		
+	}
+	
+	
+	
+	//클라이언트
+	
+	
+	//클라이언트 - 접속 성공시
+	public void onConnectionComplete(BluetoothDevice device){
+		
+	}
+	
+	//클라이언트 - 접속 실패시
+	public void onConnectionFail(BluetoothDevice device){
+		
+	}
+	
+	//클라이언트 - 재접속 성공시
+	public void onReconnectComplete(){
+		
+	}
+	
+	//클라이언트 - 재접속 실패시
+	public void onReconnectFailed(){
+		
+	}
+	
+	
+	
+	
+	//Dice+
+	public void onDicePlusEstablishComplete(Die[] dice){
+		SubjectDeviceMapper.getInstance().registerDice(dice);
+	}
+	
+	public void onDicePlusEstablishFailed(){
+		
+	}
+	
+	public void onDicePlusConnected(Die die){
+		//두 가지 경우
+		//1. 구성중
+		//2. 게임중
+	}
+	
+	public void onDicePlusLost(Die die){
+		//두 가지 경우
+		//1. 구성중
+		//2. 게임중
+	}
+	
+	public void onDicePlusWaitComplete(Die die){
+		
+	}
+	
+	public void onDicePlusWaitTimeOut(Die die){
+		
+	}
+	
+}

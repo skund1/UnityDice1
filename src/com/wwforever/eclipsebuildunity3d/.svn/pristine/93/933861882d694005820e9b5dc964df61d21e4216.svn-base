@@ -1,0 +1,205 @@
+package kr.ac.kookmin.cs.distboard.activity;
+
+import java.util.ArrayList;
+
+import kr.ac.kookmin.cs.distboard.DistributedBoardgame;
+import kr.ac.kookmin.cs.distboard.Mediator;
+import kr.ac.kookmin.cs.distboard.enumeration.Mode;
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.LinearGradient;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class ModeSelectionActivity extends Activity {
+
+	private static final String TAG = "20083271:ModeSelectionActivity";
+	
+	//액티비티 모드 네임에 대해
+	public static final String ACTIVITY_MODE = "activity_mode";
+	//가능한 값들은
+	public static final int HOST_CLIENT_SELECT_MODE = 0;
+	public static final int HOST_PREPARE_MODE = 1;
+	public static final int CLIENT_JOIN_MODE = 2;//클라이언트 접속 액티비티
+
+	//호스트 준비모드 : 최소 플레이어 네임에 대해
+	public static final String MIN_PLAYERS = "min_hosts";//가능한 값들은 정수
+
+	//호스트 준비모드 : 최대 플레이어 네임에 대해
+	public static final String MAX_PLAYERS = "max_hosts";//가능한 값들은 정수
+
+	//호스트 준비모드 : 정확한 다이스 플러스 네임에 대해
+	public static final String EXACT_DICEPLUSES = "exact_dicepluses";//가능한 값들은 정수
+
+	//호스트 준비모드 : 정확한 윷 네임에 대해
+	public static final String EXACT_YUTS = "exact_yuts";//가능한 값들은 정수
+	
+	//클라이언트 합류 모드 : 탐색된 장치들에 대해
+	public static final String DISCOVERED_DEVICES = "discovered_devices";//가능한 값들은 블루투스 장치 목록
+
+	
+	//여기서부터 핸들러 관련(비동기 연결 사건)
+	
+	public static final int ESTABLISH_COMPLETE = 0;
+	public static final int ESTABLISH_TIMEOUT = 1;
+	public static final int ESTABLISH_PLAYER_CONNECTED = 2;//obj : 클라이언트 장치
+	public static final int ESTABLISH_PLAYER_DISCONNECTED = 3;//obj : 클라이언트 장치
+	public static final int ESTABLISH_YUT_CONNECTED = 4;//obj : 윷 장치
+	public static final int ESTABLISH_DICEPLUSE_CONNECTED = 5;//obj : Die객체
+	
+	
+	public static final int CONNECT_COMPLETE = 6;
+	public static final int CONNECT_FAILED = 7;
+	public static final int CONNECT_OK_TO_GO = 8;//호스트의 다음화면 넘어가도 좋은 신호
+	
+	
+	//다룰 넘어온 인텐트
+	Intent currentIntent = null;
+	
+	//텍스트 뷰 리스트
+	ArrayList<TextView> tvs = new ArrayList<TextView>();
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Log.i(TAG, "액티비티가 만들어졌습니다.");
+		
+		currentIntent = getIntent();
+		int activityMode = (int) currentIntent.getExtras().get(ACTIVITY_MODE);
+		
+		switch(activityMode){
+		
+		case HOST_CLIENT_SELECT_MODE:
+			setHostClientSelectMode();
+			break;
+		case HOST_PREPARE_MODE:
+			setHostPrepareMode();
+			break;
+		case CLIENT_JOIN_MODE:
+			setClientJoinMode();
+			break;
+		}
+	}
+	
+
+	private void setHostClientSelectMode() {
+		LinearLayout linear = new LinearLayout(this);
+
+		TextView tv = new TextView(this);
+		tv.setText("\n호스트 클라이언트 선택");
+		linear.addView(tv);
+
+		/**
+		 * 호스트 모드 버튼
+		 */
+		Button hostModeButton = new Button(this);
+		hostModeButton.setText("호스트 모드");
+		// hostModeButton.setWidth(66);
+		// hostModeButton.setHeight(16);
+		hostModeButton.setTextSize(14);
+		//hostModeButton.setId(0);
+		hostModeButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View button) {
+				Mediator.getInstance().completeSelectHostClient(Mode.HOST);
+				ModeSelectionActivity.this.finish();
+			}
+		});
+
+		/**
+		 * 클라이언트 모드 버튼
+		 */
+		Button clientModeButton = new Button(this);
+		clientModeButton.setText("클라이언트 모드");
+		// clientModeButton.setWidth(66);
+		// clientModeButton.setHeight(16);
+		clientModeButton.setTextSize(14);
+		//clientModeButton.setId(1);
+		clientModeButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View button) {
+				Mediator.getInstance().completeSelectHostClient(Mode.HOST);
+				ModeSelectionActivity.this.finish();
+				
+			}
+		});
+
+		/**
+		 * 두 가지 버튼 설정
+		 */
+		linear.addView(hostModeButton);
+		linear.addView(clientModeButton);
+
+		setContentView(linear);
+	}
+
+	private void setHostPrepareMode() {
+		LinearLayout linear = new LinearLayout(this);
+
+		TextView tv = new TextView(this);
+		tv.setText("/n플레이어 목록");
+		tvs.add(tv);
+		linear.addView(tv);
+		
+		int minPlayers = (int) currentIntent.getExtras().get(MIN_PLAYERS);
+		int maxPlayers = (int) currentIntent.getExtras().get(MAX_PLAYERS);
+		int exactDicePluses = (int) currentIntent.getExtras().get(EXACT_DICEPLUSES);
+		int exactYuts = (int) currentIntent.getExtras().get(EXACT_YUTS);
+
+		for(int i = 0 ; i < minPlayers ; i++){
+		}
+		
+		
+		for(int i = 0 ; i < maxPlayers ; i++){
+			tv = new TextView(this);
+			tv.setText("플레이어 " + i);
+			tvs.add(tv);
+			linear.addView(tv);
+		}
+		
+		tv = new TextView(this);
+		tv.setText("/n다이스 플러스 목록");
+		tvs.add(tv);
+		linear.addView(tv);
+		
+		for(int i = 0 ; i < exactDicePluses ; i++){
+			tv = new TextView(this);
+			tv.setText("다이스 플러스 " + i);
+			tvs.add(tv);
+			linear.addView(tv);
+		}
+		
+		tv = new TextView(this);
+		tv.setText("/n윷 목록");
+		tvs.add(tv);
+		linear.addView(tv);
+		
+		for(int i = 0 ; i < exactYuts ; i++){
+			tv = new TextView(this);
+			tv.setText("윷 " + i);
+			tvs.add(tv);
+			linear.addView(tv);
+		}
+
+		setContentView(linear);
+	}
+
+	private void setClientJoinMode() {
+		LinearLayout linear = new LinearLayout(this);
+
+		TextView tv = new TextView(this);
+		tv.setText("\n\n\n클라이언트 합류 모드");
+		linear.addView(tv);
+
+
+		setContentView(linear);
+	}
+}

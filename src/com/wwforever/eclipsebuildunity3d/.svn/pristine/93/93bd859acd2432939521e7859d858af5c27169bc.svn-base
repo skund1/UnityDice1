@@ -1,0 +1,33 @@
+package kr.ac.kookmin.cs.distboard.controller;
+
+import kr.ac.kookmin.cs.distboard.Player;
+import kr.ac.kookmin.cs.distboard.subobject.Distracter;
+
+public interface PlayerListener {
+	// specified to players
+
+	public Distracter onChoiceRequest(Player<?> srcPlayer, Distracter distracter);
+
+	public void onGiveRequest(Player<?> srcPlayer, Object[] content);
+
+	public void onTakeRequest(Player<?> srcPlayer, Object[] content);
+
+	public void onGiveSituation(Player<?> srcPlayer, Object situation);
+	
+	public void onRollDiceRequest();
+	// has system default routine
+
+	public void onRollYutRequest();
+	// has system default routine
+
+	public void onGetOutRequest();
+	// has system default routine
+
+	public void onRollDiceResult(Player<?> srcPlayer, int result);
+	// has system default routine
+
+	public void onRollYutResult(Player<?> srcPlayer, int result);
+	// has system default routine
+
+	
+}

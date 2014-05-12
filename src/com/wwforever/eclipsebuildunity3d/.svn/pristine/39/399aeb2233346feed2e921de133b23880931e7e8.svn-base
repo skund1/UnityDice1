@@ -1,0 +1,31 @@
+package kr.ac.kookmin.cs.distboard.util;
+
+import java.util.ArrayList;
+
+import us.dicepl.android.sdk.Die;
+import android.bluetooth.BluetoothDevice;
+
+public class ArrayListConverter<T> {
+	public static Die[] toDiceArrayListToArray(ArrayList<Die> diceArrayList){
+		Die[] dice = new Die[diceArrayList.size()];
+		
+		for(int i = 0 ; i < diceArrayList.size() ; i++){
+			dice[i] = diceArrayList.get(i);
+		}
+		
+		return dice;
+		
+	}
+	
+	public static BluetoothDevice[] toBluetoothDeviceArrayListToArray(ArrayList<BluetoothDevice> bluetoothDeviceArrayList){
+		BluetoothDevice[] devices = new BluetoothDevice[bluetoothDeviceArrayList.size()];
+		
+		for(int i = 0 ; i < bluetoothDeviceArrayList.size() ; i++){
+			devices[i] = bluetoothDeviceArrayList.get(i);
+		}
+		
+		return devices;
+		
+	}
+	
+}

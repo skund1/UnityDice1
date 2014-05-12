@@ -1,0 +1,30 @@
+package kr.ac.kookmin.cs.distboard.util;
+
+import android.util.Log;
+
+public class Timer {
+	
+	private static final String TAG = "Timer";
+	private boolean isStarted = false;
+	private long startTime = 0L;
+	private long elapsedTime = 0L;
+
+	public void start(){
+		isStarted = true;
+		startTime = System.currentTimeMillis();
+		Log.i(TAG, "Timer is started");
+	}
+
+	public long finish(){
+		if(isStarted == true){
+			isStarted = false;
+			elapsedTime = System.currentTimeMillis();
+		}else{
+			return 0L;
+		}
+		Log.i(TAG, "elapsedTime is : " + (elapsedTime - startTime));
+		return elapsedTime - startTime;
+		
+	}
+	
+}
