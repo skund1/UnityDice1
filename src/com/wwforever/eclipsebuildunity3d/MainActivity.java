@@ -10,8 +10,10 @@ import com.unity3d.player.UnityPlayer;
 import com.unity3d.player.UnityPlayerActivity;
 
 
+
 public class MainActivity extends UnityPlayerActivity
 {
+	private static final String TAG = "20083271:Emulator";
 	public static boolean isDisapper = false;
 	public static String isClear = "0";
 	public String itemType="0";
@@ -36,6 +38,7 @@ public class MainActivity extends UnityPlayerActivity
 	  Intent intentIsStop = new Intent();
 	  intentIsStop.setAction("android.intent.action.SUPER");
 	  intentIsStop.putExtra("diceNumber", strMsg); // "명칭", "실제값"
+	  Log.i(TAG, "receiveNumber : " + strMsg);
 	  sendBroadcast(intentIsStop);
 	  }
 	  
@@ -68,6 +71,10 @@ public class MainActivity extends UnityPlayerActivity
 	  UnityPlayer.UnitySendMessage("PluginEclipseManager", "JNICall_T", itemType);
 	  UnityPlayer.UnitySendMessage("PluginEclipseManager", "JNICall_Y", yutNumber);
 	  UnityPlayer.UnitySendMessage("PluginEclipseManager", "JNICall_X", backYutNumber);
+	  Log.i(TAG, "diceNumber : " + diceNumber);
+	  Log.i(TAG, "yutNumber : " + yutNumber);
+	  Log.i(TAG, "backYutNumber : " + backYutNumber);
+	  Log.i(TAG, "itemType : " + itemType);
   }
   
   public void JNICall_F()
