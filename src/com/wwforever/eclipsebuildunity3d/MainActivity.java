@@ -9,13 +9,10 @@ import android.util.Log;
 import com.unity3d.player.UnityPlayer;
 import com.unity3d.player.UnityPlayerActivity;
 
-
-
 public class MainActivity extends UnityPlayerActivity
 {
 	private static final String TAG = "20083271:Emulator";
 	public static boolean isDisapper = false;
-	public static String isClear = "0";
 	public String itemType="0";
 	public String diceNumber="2";
 	public String yutNumber="3";
@@ -23,8 +20,8 @@ public class MainActivity extends UnityPlayerActivity
 	public String packageName="";
 	public String ableButton="1";
 	public String activityName="";
-	public static MainActivity mActivity;
 	public static boolean isSend=false;
+	
   public void onCreate(Bundle savedInstanceState)
   {
     super.onCreate(savedInstanceState);
@@ -33,40 +30,41 @@ public class MainActivity extends UnityPlayerActivity
 
   public synchronized void JNICall_U(String strMsg, Activity activity)
   {
-		// Log.i(TAG, "isSend 1  =" + isSend);
-		// Log.i(TAG, "isDisappear 1 =" + isDisapper);
+		// send emulator value operator
 		if (isSend == false) {
 			isSend = true;
 			Intent intentIsStop = new Intent();
 			intentIsStop.setAction("android.intent.action.SUPER");
-			intentIsStop.putExtra("diceNumber", strMsg); // "명칭", "실제값"
+			intentIsStop.putExtra("diceNumber", strMsg); 
 			Log.i(TAG, "receiveNumber : " + strMsg);
 			sendBroadcast(intentIsStop);
 		}
-
+		
+		// call disappear operator
 		if (isDisapper == true) {
 			isDisapper = false;
 			Log.i(TAG, "back game");
 			// change game activity
-			//packageName="boardgame.yut";
-			//activityName="boardgame.yut.view.PlayActivity";
 			ComponentName compName = new ComponentName(packageName,
 					activityName);
 			Log.i(TAG, "packageName : " + packageName);
 			Log.i(TAG, "activityName : " + activityName);
 			Intent intent = new Intent();
-			// Intent intent = new Intent(intent.ACTION_MAIN);
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			//1 -- x
+			//intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			//3
+			intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			UnityPlayer.UnitySendMessage("PluginEclipseManager", "JNICall_J",
 					"a");
-			// intent.addCategory(Intent.CATEGORY_LAUNCHER);
 			intent.setComponent(compName);
 			activity.startActivity(intent);
 			Log.e(TAG, "intent data string contents : " + intent.getDataString());
 			Log.e(TAG, "intent data string contents : " + intent.toString());
 		}
   }
+  
+  //send initial value to unity
   public void JNICall_V()
   {
 	  Intent intentGetClassName = this.getIntent();
@@ -88,9 +86,9 @@ public class MainActivity extends UnityPlayerActivity
 	  Log.i(TAG, "itemType : " + itemType);
   }
   
+  //initial isSend value
   public void JNICall_F()
   {
 	  isSend=false;
   }
-  
 }
